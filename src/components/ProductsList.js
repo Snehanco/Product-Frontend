@@ -1,5 +1,3 @@
-// JavaScript source code
-
 import React, { useState, useEffect } from "react";
 import ProductsDataService from "../services/ProductService";
 import { Link } from "react-router-dom";
@@ -43,13 +41,21 @@ const ProductsList = () => {
     };
 
     const findByName = () => {
-        ProductsDataService.findByName(searchName).then((response) => {
-            setProduct(response.data);
-            console.log(response.data);
+        setCurrentProduct(null);
+        ProductsDataService.searchByName(searchName).then((response) => {
+            if (response.status === 200) {
+                setProduct(response.data);
+                console.log(response.data);
+            } else {
+                setProduct([]); // Clear product list if no products found
+            }
         }).catch((e) => {
-            console.log(e)
+            console.log(e);
+            setProduct([]); // Clear product list if error occurs
         });
     };
+    
+    
 
     const removeAllProducts = () => {
         ProductsDataService.removeAll().then((response) => {
